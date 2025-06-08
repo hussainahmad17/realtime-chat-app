@@ -1,5 +1,10 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+
+import express from "express";
+console.log('✅ MONGODB_URI:', process.env.MONGODB_URI);
+console.log('✅ Cloudinary Name:', process.env.CLOUDINARY_CLOUD_NAME);
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -11,7 +16,6 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
-dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
