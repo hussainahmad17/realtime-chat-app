@@ -1,10 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-
 import express from "express";
-console.log('✅ MONGODB_URI:', process.env.MONGODB_URI);
-console.log('✅ Cloudinary Name:', process.env.CLOUDINARY_CLOUD_NAME);
+import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -16,6 +11,7 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
+dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
@@ -31,20 +27,27 @@ app.use(
 
 
 app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "default-src * 'self' blob: data:;");
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' blob:; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "connect-src 'self' ws: wss:; " +
+    "frame-src 'self'"
+  );
   next();
 });
-
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
-app.use(express.static(path.join(__dirname, '../dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
 }
 
 server.listen(PORT, () => {
