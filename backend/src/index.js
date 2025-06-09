@@ -29,15 +29,16 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; " +
+    "default-src 'self' blob:; " +
     "script-src 'self' 'unsafe-inline' blob:; " +
     "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data:; " +
-    "connect-src 'self' ws: wss:; " +
+    "img-src 'self' data: blob:; " +
+    "connect-src 'self' ws: wss: blob:; " +
     "frame-src 'self'"
   );
   next();
 });
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
